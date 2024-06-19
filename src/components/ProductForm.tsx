@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createProduct, updateProduct } from "../apiFacade";
 import { Product } from "../interfaces/productInterface";
 import { toast } from "react-toastify";
+import "../styling/product-form.css";
 import "react-toastify/dist/ReactToastify.css";
 
 interface ProductFormProps {
@@ -52,10 +53,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, product }) => {
   };
 
   return (
-    <div className="reservation-form-page">
-      <h2 className="reservation-header">Add New Product</h2>
-      <div className="reservation-form-container">
-        <form className="reservation-form" onSubmit={handleSubmit}>
+    <div className="product-form-page">
+      <h2 className="product-header">Add New Product</h2>
+      <div className="product-form-container">
+        <form className="product-form" onSubmit={handleSubmit}>
           <label>
             Name:
             <input type="text" name="name" value={formData.name} onChange={handleInputChange} />

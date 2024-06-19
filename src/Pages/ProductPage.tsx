@@ -27,7 +27,7 @@ function ProductPage() {
   };
 
   return (
-    <div style={{ display: "flex", margin: "1rem", padding: "1vw", gap: "2vw", justifyContent: "space-evenly" }}>
+    <div style={{ display: "flex", margin: "2rem", padding: "1vw", gap: "20vw", justifyContent: "space-evenly" }}>
       <ProductForm onSubmit={handleProductSubmit} product={selectedProduct} />
       <ProductList products={products} setProducts={setProducts} onEdit={handleProductEdit} />
     </div>

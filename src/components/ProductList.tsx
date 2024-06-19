@@ -1,6 +1,7 @@
 import { deleteProduct } from "../apiFacade";
 import { Product } from "../interfaces/productInterface";
 import { toast } from "react-toastify";
+import "../styling/product-list.css";
 
 interface ProductListProps {
   products: Product[];
