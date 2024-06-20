@@ -49,24 +49,6 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
     return athlete ? athlete.name : "Unknown Athlete";
   };
 
-  const filteredResults = results.filter((result) => {
-    let match = true;
-
-    if (disciplineFilter && result.discipline.name !== disciplineFilter) {
-      match = false;
-    }
-
-    if (genderFilter && athleteGender(result) !== genderFilter) {
-      match = false;
-    }
-
-    if (ageGroupFilter && !inAgeGroup(result, ageGroupFilter)) {
-      match = false;
-    }
-
-    return match;
-  });
-
   const athleteGender = (result: Result): string => {
     const athlete = athletes.find((athlete) => athlete.results.some((athleteResult) => athleteResult.id === result.id));
     return athlete ? athlete.gender : "";
@@ -94,14 +76,32 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
     }
   };
 
+  const filteredResults = results.filter((result) => {
+    let match = true;
+
+    if (disciplineFilter && result.discipline.name.toLowerCase() !== disciplineFilter.toLowerCase()) {
+      match = false;
+    }
+
+    if (genderFilter && athleteGender(result) !== genderFilter) {
+      match = false;
+    }
+
+    if (ageGroupFilter && !inAgeGroup(result, ageGroupFilter)) {
+      match = false;
+    }
+
+    return match;
+  });
+
   const sortResults = (filteredResults: Result[]): Result[] => {
     return filteredResults.sort((a, b) => {
       switch (a.resultType) {
-        case "time":
+        case "TIME":
+          // For time, lower is better, so a - b
           return parseTime(a.resultValue) - parseTime(b.resultValue);
-        case "meters":
-          return parseInt(b.resultValue) - parseInt(a.resultValue);
-        case "points":
+        case "DISTANCE":
+        case "POINTS":
           return parseInt(b.resultValue) - parseInt(a.resultValue);
         default:
           return 0;
@@ -111,7 +111,9 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
 
   const parseTime = (time: string): number => {
     const parts = time.split(":");
-    if (parts.length === 3) {
+    if (parts.length === 4) {
+      return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]) + parseInt(parts[3]) / 1000;
+    } else if (parts.length === 3) {
       return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
     } else if (parts.length === 2) {
       return parseInt(parts[0]) * 60 + parseInt(parts[1]);
@@ -183,7 +185,9 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
           {sortResults(filteredResults).map((result) => (
             <tr key={result.id}>
               <td>{result.discipline.name}</td>
-              <td>{result.resultValue}</td>
+              <td>
+                {result.resultValue} {result.resultType === "DISTANCE" ? "m" : result.resultType === "POINTS" ? "points" : ""}
+              </td>
               <td>{result.date}</td>
               <td>{getAthleteName(result)}</td>
               <td>
