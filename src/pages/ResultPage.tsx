@@ -30,11 +30,12 @@ function ResultPage() {
   const handleResultSubmit = async (result: Result, athleteId: number) => {
     try {
       const athlete = await getAthleteById(athleteId);
-      await updateAthlete(athleteId, athlete);
-      await fetchAthletesAndResults();
       console.log("Athlete:", athlete, "Result:", result);
-
       athlete.results.push(result);
+      await fetchAthletesAndResults();
+      await updateAthlete(athleteId, athlete);
+      const updatedAthletes = athletes.map((a) => (a.id === athlete.id ? athlete : a));
+      setAthletes(updatedAthletes);
       setSelectedResult(null);
       setSelectedAthleteId(null);
       window.scrollTo(0, 0);
@@ -44,7 +45,6 @@ function ResultPage() {
   };
 
   const handleResultEdit = async (result: Result, athleteId: number | null) => {
-    await fetchAthletesAndResults();
     setSelectedResult(result);
     setSelectedAthleteId(athleteId);
   };
