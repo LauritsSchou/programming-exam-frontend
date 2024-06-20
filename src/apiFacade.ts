@@ -1,4 +1,4 @@
-import { Product } from "./interfaces/productInterface";
+import { Athlete } from "./interfaces/athleteInterface";
 import { API_URL } from "./settings";
 
 function makeOptions(method: string, body: object | null): RequestInit {
@@ -27,23 +27,23 @@ async function handleHttpErrors(res: Response) {
   return res.json();
 }
 
-async function getProducts(): Promise<Product[]> {
-  return fetch(API_URL + "/products").then(handleHttpErrors);
+async function getAthletes(): Promise<Athlete[]> {
+  return fetch(API_URL + "/athletes").then(handleHttpErrors);
 }
-async function getProductById(id: number): Promise<Product> {
-  return fetch(API_URL + "/products/" + id).then(handleHttpErrors);
+async function getAthleteById(id: number): Promise<Athlete> {
+  return fetch(API_URL + "/athletes/" + id).then(handleHttpErrors);
 }
-async function createProduct(product: Product): Promise<Product> {
-  return fetch(API_URL + "/products", makeOptions("POST", product)).then(handleHttpErrors);
+async function createAthlete(athlete: Athlete): Promise<Athlete> {
+  return fetch(API_URL + "/athletes", makeOptions("POST", athlete)).then(handleHttpErrors);
 }
-async function updateProduct(id: number, product: Product): Promise<Product> {
-  const options = makeOptions("PUT", product);
-  return fetch(API_URL + "/products/" + id, options).then(handleHttpErrors);
+async function updateAthlete(id: number, athlete: Athlete): Promise<Athlete> {
+  const options = makeOptions("PUT", athlete);
+  return fetch(API_URL + "/athletes/" + id, options).then(handleHttpErrors);
 }
-async function deleteProduct(id: number) {
+async function deleteAthlete(id: number) {
   const options = makeOptions("DELETE", null);
-  const response = await fetch(API_URL + "/products/" + id, options);
+  const response = await fetch(API_URL + "/athletes/" + id, options);
   return response.status;
 }
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
+export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete };

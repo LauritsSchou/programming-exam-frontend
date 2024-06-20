@@ -1,4 +1,4 @@
-.product-form-container {
+.athlete-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,18 +10,18 @@
   box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.2);
 }
 
-.product-form {
+.athlete-form {
   width: 100%;
 }
 
-.product-form label {
+.athlete-form label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
   color: #333;
 }
 
-.product-form input {
+.athlete-form input {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -30,7 +30,7 @@
   border-radius: 4px;
 }
 
-.product-form button[type="submit"] {
+.athlete-form button[type="submit"] {
   background-color: #28a745;
   color: white;
   border: none;
@@ -39,11 +39,11 @@
   padding: 8px 16px;
 }
 
-.product-form button[type="submit"]:hover {
+.athlete-form button[type="submit"]:hover {
   background-color: #218838;
 }
 
-.product-form button[type="reset"] {
+.athlete-form button[type="reset"] {
   background-color: red;
   color: white;
   border: none;
@@ -52,6 +52,6 @@
   padding: 8px 16px;
 }
 
-.product-form button[type="reset"]:hover {
+.athlete-form button[type="reset"]:hover {
   background-color: #dc3545;
 }

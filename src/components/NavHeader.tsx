@@ -9,7 +9,7 @@ export default function NavHeader() {
           <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <NavLink to="/products">Products</NavLink>
+          <NavLink to="/athletes">Athletes</NavLink>
         </li>
       </ul>
     </nav>
