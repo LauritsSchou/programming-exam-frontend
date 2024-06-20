@@ -48,6 +48,17 @@ async function deleteAthlete(id: number) {
 async function getDisciplines() {
   return fetch(API_URL + "/disciplines").then(handleHttpErrors);
 }
+async function createDiscipline(discipline: object) {
+  return fetch(API_URL + "/disciplines", makeOptions("POST", discipline)).then(handleHttpErrors);
+}
+async function updateDiscipline(id: number, discipline: object) {
+  return fetch(API_URL + "/disciplines/" + id, makeOptions("PUT", discipline)).then(handleHttpErrors);
+}
+async function deleteDiscipline(id: number) {
+  const options = makeOptions("DELETE", null);
+  const response = await fetch(API_URL + "/disciplines/" + id, options);
+  return response.status;
+}
 async function getResults() {
   return fetch(API_URL + "/results").then(handleHttpErrors);
 }
@@ -66,4 +77,4 @@ async function deleteResult(id: number) {
   return response.status;
 }
 
-export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete, getDisciplines, getResults, getResultsById, createResult, updateResult, deleteResult };
+export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete, getResults, getResultsById, createResult, updateResult, deleteResult, getDisciplines, createDiscipline, updateDiscipline, deleteDiscipline };

@@ -14,6 +14,9 @@ export default function NavHeader() {
         <li>
           <NavLink to="/results">Results</NavLink>
         </li>
+        <li>
+          <NavLink to="/disciplines">Disciplines</NavLink>
+        </li>
       </ul>
     </nav>
   );
