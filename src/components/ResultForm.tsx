@@ -24,6 +24,7 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
 
   const [formData, setFormData] = useState<Result>(result || defaultFormObj);
   const [allDisciplines, setAllDisciplines] = useState<Discipline[]>([]);
+  const [filteredDisciplines, setFilteredDisciplines] = useState<Discipline[]>([]);
   const [allAthletes, setAllAthletes] = useState<Athlete[]>([]);
   const [selectedAthlete, setSelectedAthlete] = useState<number | null | undefined>(selectedAthleteId);
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -113,13 +114,13 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
   };
 
   const handleAthleteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const athleteId = parseInt(e.target.value, 10);
+    const athleteId = parseInt(e.target.value);
     setSelectedAthlete(athleteId);
     const selectedAthlete = allAthletes.find((athlete) => athlete.id === athleteId);
     if (selectedAthlete) {
       const athleteDisciplineIds = selectedAthlete.disciplines.map((discipline) => discipline.id);
-      const filteredDisciplines = allDisciplines.filter((discipline) => athleteDisciplineIds.includes(discipline.id));
-      setAllDisciplines(filteredDisciplines);
+      const disciplines = allDisciplines.filter((discipline) => athleteDisciplineIds.includes(discipline.id));
+      setFilteredDisciplines(disciplines);
     }
   };
 
@@ -143,7 +144,7 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
             Discipline:
             <select name="discipline" value={formData.discipline.id} onChange={handleDisciplineChange}>
               <option value="">Select Discipline</option>
-              {allDisciplines.map((discipline) => (
+              {filteredDisciplines.map((discipline) => (
                 <option key={discipline.id} value={discipline.id}>
                   {discipline.name}
                 </option>
