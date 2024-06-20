@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { deleteAthlete } from "../apiFacade";
+import React, { useState, useEffect } from "react";
+import { deleteAthlete, getDisciplines } from "../apiFacade";
 import { Athlete } from "../interfaces/athleteInterface";
+import { Discipline } from "../interfaces/disciplineInterface";
 import { toast } from "react-toastify";
 import AthleteDetailsModal from "./AthleteDetailsModal";
 import "../styling/athlete-list.css";
@@ -17,10 +18,25 @@ const AthleteList: React.FC<AthleteListProps> = ({ athletes, setAthletes, onEdit
   const [searchTerm, setSearchTerm] = useState("");
   const [genderFilter, setGenderFilter] = useState("");
   const [clubFilter, setClubFilter] = useState("");
-  const [disciplineFilter, setDisciplineFilter] = useState("");
+  const [disciplineFilter, setDisciplineFilter] = useState<number | null>(null); // Updated to hold discipline ID
   const [ageGroupFilter, setAgeGroupFilter] = useState("");
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [allDisciplines, setAllDisciplines] = useState<Discipline[]>([]);
+
+  useEffect(() => {
+    fetchDisciplines();
+  }, []);
+
+  const fetchDisciplines = async () => {
+    try {
+      const disciplines = await getDisciplines();
+      setAllDisciplines(disciplines);
+    } catch (error) {
+      console.error("Error fetching disciplines:", error);
+      toast.error("Failed to fetch disciplines");
+    }
+  };
 
   const handleDelete = async (id: number | undefined) => {
     if (id === undefined) {
@@ -94,7 +110,7 @@ const AthleteList: React.FC<AthleteListProps> = ({ athletes, setAthletes, onEdit
     .filter((athlete) => athlete.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter((athlete) => (genderFilter ? athlete.gender === genderFilter : true))
     .filter((athlete) => (clubFilter ? athlete.club.toLowerCase().includes(clubFilter.toLowerCase()) : true))
-    .filter((athlete) => (disciplineFilter ? athlete.disciplines.some((discipline) => discipline.name.toLowerCase().includes(disciplineFilter.toLowerCase())) : true))
+    .filter((athlete) => (disciplineFilter ? athlete.disciplines.some((d) => d.id === disciplineFilter) : true))
     .filter((athlete) => (ageGroupFilter ? getAgeGroup(athlete.age) === ageGroupFilter : true));
 
   return (
@@ -103,9 +119,19 @@ const AthleteList: React.FC<AthleteListProps> = ({ athletes, setAthletes, onEdit
 
       <div className="filters">
         <input type="text" placeholder="Search by name" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <input type="text" placeholder="Search by club name" value={clubFilter} onChange={(e) => setClubFilter(e.target.value)} />
 
-        <input type="text" placeholder="Filter by club" value={clubFilter} onChange={(e) => setClubFilter(e.target.value)} />
-        <input type="text" placeholder="Filter by discipline" value={disciplineFilter} onChange={(e) => setDisciplineFilter(e.target.value)} />
+        <label>
+          <select value={disciplineFilter || ""} onChange={(e) => setDisciplineFilter(parseInt(e.target.value) || null)}>
+            <option value="">All Disciplines</option>
+            {allDisciplines.map((discipline) => (
+              <option key={discipline.id} value={discipline.id}>
+                {discipline.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)}>
           <option value="">All Genders</option>
           <option value="Male">Male</option>
