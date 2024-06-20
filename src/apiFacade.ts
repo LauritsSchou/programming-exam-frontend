@@ -45,5 +45,8 @@ async function deleteAthlete(id: number) {
   const response = await fetch(API_URL + "/athletes/" + id, options);
   return response.status;
 }
+async function getDisciplines() {
+  return fetch(API_URL + "/disciplines").then(handleHttpErrors);
+}
 
-export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete };
+export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete, getDisciplines };

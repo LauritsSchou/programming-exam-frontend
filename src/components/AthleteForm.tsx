@@ -1,10 +1,11 @@
-// AthleteForm.tsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { createAthlete, updateAthlete } from "../apiFacade";
 import { Athlete } from "../interfaces/athleteInterface";
+import { Discipline } from "../interfaces/disciplineInterface";
+import { getDisciplines } from "../apiFacade";
 import { toast } from "react-toastify";
-import "../styling/athlete-form.css";
 import "react-toastify/dist/ReactToastify.css";
+import "../styling/athlete-form.css";
 
 interface AthleteFormProps {
   onSubmit: (athlete: Athlete) => void;
@@ -15,7 +16,7 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
   const defaultFormObj: Athlete = {
     id: undefined,
     name: "",
-    age: 0,
+    age: "",
     gender: "",
     club: "",
     disciplines: [],
@@ -23,13 +24,32 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
   };
 
   const [formData, setFormData] = useState<Athlete>(athlete || defaultFormObj);
+  const [allDisciplines, setAllDisciplines] = useState<Discipline[]>([]);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     setFormData(athlete || defaultFormObj);
+    fetchDisciplines();
   }, [athlete]);
+
+  const fetchDisciplines = async () => {
+    try {
+      const disciplines = await getDisciplines();
+      setAllDisciplines(disciplines);
+    } catch (error) {
+      console.error("Error fetching disciplines:", error);
+      toast.error("Failed to fetch disciplines");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Perform validation checks
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       let savedAthlete;
       if (formData.id) {
@@ -46,20 +66,61 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
     }
   };
 
+  const validateForm = (): boolean => {
+    const errors: string[] = [];
+
+    if (!formData.name || !formData.age || !formData.gender || !formData.club) {
+      errors.push("Please fill out all fields.");
+    }
+
+    if (isNaN(Number(formData.age)) || Number(formData.age) < 6) {
+      errors.push("Age must be a number and minimum 6 years old.");
+    }
+
+    if (formData.disciplines.length === 0) {
+      errors.push("Please select at least one discipline.");
+    }
+
+    setFormErrors(errors);
+    return errors.length === 0;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name === "age" && Number(value) < 0) {
+
+    if (name === "age" && isNaN(Number(value))) {
       return;
     }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
   };
 
+  const handleDisciplineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const disciplineId = parseInt(e.target.value, 10);
+    const isChecked = e.target.checked;
+
+    if (isChecked) {
+      const disciplineToAdd = allDisciplines.find((discipline) => discipline.id === disciplineId);
+      if (disciplineToAdd) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          disciplines: [...prevFormData.disciplines, disciplineToAdd],
+        }));
+      }
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        disciplines: prevFormData.disciplines.filter((discipline) => discipline.id !== disciplineId),
+      }));
+    }
+  };
+
   return (
     <div className="athlete-form-page">
-      <h2 className="athlete-header">Add New Athlete</h2>
+      <h2 className="athlete-header">{formData.id ? "Edit Athlete" : "Add New Athlete"}</h2>
       <div className="athlete-form-container">
         <form className="athlete-form" onSubmit={handleSubmit}>
           <label>
@@ -82,6 +143,22 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
             Club:
             <input type="text" name="club" value={formData.club} onChange={handleInputChange} />
           </label>
+          <div className="disciplines-section">
+            <h3>Disciplines:</h3>
+            {allDisciplines.map((discipline) => (
+              <label key={discipline.id}>
+                <input type="checkbox" name={`discipline_${discipline.id}`} value={discipline.id} checked={formData.disciplines.some((d) => d.id === discipline.id)} onChange={handleDisciplineChange} />
+                {discipline.name}
+              </label>
+            ))}
+          </div>
+          <div className="form-errors">
+            {formErrors.map((error, index) => (
+              <p key={index} className="error-message">
+                {error}
+              </p>
+            ))}
+          </div>
           <button type="submit">Save Athlete</button>
         </form>
       </div>

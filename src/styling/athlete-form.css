@@ -1,57 +1,98 @@
 .athlete-form-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  max-width: 600px;
+  max-width: 1200px; /* Adjusted max-width for wider form */
   padding: 20px;
   text-align: left;
   border: 1px solid #000;
   box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.2);
 }
 
-.athlete-form {
-  width: 100%;
+.athlete-form-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2vh;
+  min-height: 100vh;
+  max-width: 1200px; /* Adjusted max-width for wider form page */
+}
+
+.athlete-header {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .athlete-form label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 6px; /* Adjusted margin for labels to make the form more compact vertically */
   font-weight: bold;
   color: #333;
 }
 
-.athlete-form input {
-  width: 100%;
+.athlete-form input,
+.athlete-form select {
+  width: calc(100% - 16px); /* Adjusted width to accommodate padding and border */
   padding: 8px;
   margin-top: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 14px;
 }
 
-.athlete-form button[type="submit"] {
+.athlete-form select {
+  background-color: #fff;
+}
+
+.athlete-form button[type="submit"],
+.athlete-form button[type="reset"] {
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   padding: 8px 16px;
+  margin-top: 10px;
 }
 
-.athlete-form button[type="submit"]:hover {
+.athlete-form button[type="submit"]:hover,
+.athlete-form button[type="reset"]:hover {
   background-color: #218838;
 }
 
-.athlete-form button[type="reset"] {
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 8px 16px;
+.disciplines-section {
+  margin-top: 10px;
 }
 
-.athlete-form button[type="reset"]:hover {
-  background-color: #dc3545;
+.disciplines-section h3 {
+  margin-bottom: 5px;
+}
+
+.discipline-label {
+  display: block;
+  margin-bottom: 5px;
+  padding-left: 24px; /* Added padding to create space for checkbox */
+  position: relative;
+}
+
+.discipline-label input {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  .athlete-form-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .athlete-form {
+    width: 100%;
+    max-width: none;
+  }
 }
