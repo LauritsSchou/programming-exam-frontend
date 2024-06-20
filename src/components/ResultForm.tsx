@@ -10,7 +10,7 @@ import "../styling/result-form.css";
 interface ResultFormProps {
   onSubmit: (result: Result, athleteId: number) => void;
   result: Result | null;
-  selectedAthleteId: number | null; // Add this line
+  selectedAthleteId: number | null | undefined; // Add this line
 }
 
 const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthleteId }) => {
@@ -25,7 +25,7 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
   const [formData, setFormData] = useState<Result>(result || defaultFormObj);
   const [allDisciplines, setAllDisciplines] = useState<Discipline[]>([]);
   const [allAthletes, setAllAthletes] = useState<Athlete[]>([]);
-  const [selectedAthlete, setSelectedAthlete] = useState<number | null>(selectedAthleteId);
+  const [selectedAthlete, setSelectedAthlete] = useState<number | null | undefined>(selectedAthleteId);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {

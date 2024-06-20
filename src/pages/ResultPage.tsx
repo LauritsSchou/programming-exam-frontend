@@ -12,25 +12,18 @@ function ResultPage() {
   const [selectedAthleteId, setSelectedAthleteId] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchAthletes();
-    fetchResults();
+    fetchAthletesAndResults();
   }, []);
 
-  const fetchAthletes = async () => {
+  const fetchAthletesAndResults = async () => {
     try {
       const athletesList = await getAthletes();
       setAthletes(athletesList);
-    } catch (error) {
-      console.error("Error fetching athletes:", error);
-    }
-  };
 
-  const fetchResults = async () => {
-    try {
       const resultsList = await getResults();
       setResults(resultsList);
     } catch (error) {
-      console.error("Error fetching results:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -43,8 +36,7 @@ function ResultPage() {
       await updateAthlete(athleteId, athlete);
 
       // Refresh athletes and results after update
-      await fetchAthletes();
-      await fetchResults();
+      await fetchAthletesAndResults();
 
       setSelectedResult(null);
       setSelectedAthleteId(null);
