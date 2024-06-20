@@ -93,7 +93,7 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
     if (formData.discipline.resultType === "TIME") {
       const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9]):([0-9]{1,2})$/;
       if (!timeRegex.test(formData.resultValue)) {
-        errors.push("Result value must be in hh:mm:ss:msms format for disciplines with result type 'TIME'.");
+        errors.push("Result value must be in hh:mm:ss:msms format for disciplines with result type time.");
       }
     }
 
