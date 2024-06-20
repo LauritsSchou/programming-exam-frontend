@@ -1,8 +1,8 @@
-import { Discipline } from './disciplineInterface';
+import { Discipline } from "./disciplineInterface";
 export interface Result {
-    id?: number;
-    resultType: string;
-    date: string;
-    resultValue: string;
-    discipline: Discipline;
+  id?: number;
+  resultType: string;
+  date: Date;
+  resultValue: string;
+  discipline: Discipline;
 }

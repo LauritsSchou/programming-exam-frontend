@@ -48,5 +48,22 @@ async function deleteAthlete(id: number) {
 async function getDisciplines() {
   return fetch(API_URL + "/disciplines").then(handleHttpErrors);
 }
+async function getResults() {
+  return fetch(API_URL + "/results").then(handleHttpErrors);
+}
+async function getResultsById(id: number) {
+  return fetch(API_URL + "/results/" + id).then(handleHttpErrors);
+}
+async function createResult(result: object) {
+  return fetch(API_URL + "/results", makeOptions("POST", result)).then(handleHttpErrors);
+}
+async function updateResult(id: number, result: object) {
+  return fetch(API_URL + "/results/" + id, makeOptions("PUT", result)).then(handleHttpErrors);
+}
+async function deleteResult(id: number) {
+  const options = makeOptions("DELETE", null);
+  const response = await fetch(API_URL + "/results/" + id, options);
+  return response.status;
+}
 
-export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete, getDisciplines };
+export { getAthletes, getAthleteById, createAthlete, updateAthlete, deleteAthlete, getDisciplines, getResults, getResultsById, createResult, updateResult, deleteResult };

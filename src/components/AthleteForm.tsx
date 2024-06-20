@@ -99,7 +99,7 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
   };
 
   const handleDisciplineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const disciplineId = parseInt(e.target.value, 10);
+    const disciplineId = parseInt(e.target.value);
     const isChecked = e.target.checked;
 
     if (isChecked) {

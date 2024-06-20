@@ -1,0 +1,76 @@
+.result-list-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6vh;
+  min-height: 100vh;
+  max-width: 1600px;
+}
+
+.result-header {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.result-table {
+  color: black;
+  width: 100%;
+
+  border-collapse: collapse;
+  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.result-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: bold;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.result-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+
+.result-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+.details-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filters input,
+.filters select {
+  padding: 5px;
+  margin-right: 10px;
+}

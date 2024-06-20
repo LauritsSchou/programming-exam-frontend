@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { deleteAthlete } from "../apiFacade";
 import { Athlete } from "../interfaces/athleteInterface";
 import { toast } from "react-toastify";
