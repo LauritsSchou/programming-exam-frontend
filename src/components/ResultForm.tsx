@@ -89,7 +89,6 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       errors.push("Please fill out all fields and select an athlete.");
     }
 
-    // Validate resultValue based on resultType
     if (formData.discipline.resultType === "TIME") {
       const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9]):([0-9]{1,2})$/;
       if (!timeRegex.test(formData.resultValue)) {
@@ -97,7 +96,6 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       }
     }
 
-    // Ensure resultValue is not negative
     if (parseFloat(formData.resultValue) < 0) {
       errors.push("Result value cannot be negative.");
     }
