@@ -31,13 +31,8 @@ function ResultPage() {
     try {
       const athlete = await getAthleteById(athleteId);
       athlete.results.push(result);
-
-      // Update the athlete with the new result
       await updateAthlete(athleteId, athlete);
-
-      // Refresh athletes and results after update
       await fetchAthletesAndResults();
-
       setSelectedResult(null);
       setSelectedAthleteId(null);
       window.scrollTo(0, 0);
@@ -47,6 +42,7 @@ function ResultPage() {
   };
 
   const handleResultEdit = async (result: Result, athleteId: number | null) => {
+    await fetchAthletesAndResults();
     setSelectedResult(result);
     setSelectedAthleteId(athleteId);
   };

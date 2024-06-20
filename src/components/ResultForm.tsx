@@ -10,7 +10,7 @@ import "../styling/result-form.css";
 interface ResultFormProps {
   onSubmit: (result: Result, athleteId: number) => void;
   result: Result | null;
-  selectedAthleteId: number | null | undefined; // Add this line
+  selectedAthleteId: number | null | undefined;
 }
 
 const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthleteId }) => {
@@ -69,7 +69,7 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       } else {
         savedResult = await createResult(formData);
       }
-      if (selectedAthlete !== null) {
+      if (selectedAthlete !== null && selectedAthlete !== undefined) {
         onSubmit(savedResult, selectedAthlete);
       }
       setFormData(defaultFormObj);
@@ -80,7 +80,6 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       toast.error("Failed to save result");
     }
   };
-
   const validateForm = (): boolean => {
     const errors: string[] = [];
 
@@ -114,7 +113,14 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
   };
 
   const handleAthleteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedAthlete(parseInt(e.target.value, 10));
+    const athleteId = parseInt(e.target.value, 10);
+    setSelectedAthlete(athleteId);
+    const selectedAthlete = allAthletes.find((athlete) => athlete.id === athleteId);
+    if (selectedAthlete) {
+      const athleteDisciplineIds = selectedAthlete.disciplines.map((discipline) => discipline.id);
+      const filteredDisciplines = allDisciplines.filter((discipline) => athleteDisciplineIds.includes(discipline.id));
+      setAllDisciplines(filteredDisciplines);
+    }
   };
 
   return (
@@ -123,12 +129,15 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       <div className="result-form-container">
         <form className="result-form" onSubmit={handleSubmit}>
           <label>
-            Date:
-            <input type="date" name="date" value={formData.date} onChange={handleInputChange} />
-          </label>
-          <label>
-            Result Value:
-            <input type="text" name="resultValue" value={formData.resultValue} onChange={handleInputChange} />
+            Athlete:
+            <select value={selectedAthlete || ""} onChange={handleAthleteChange}>
+              <option value="">Select Athlete</option>
+              {allAthletes.map((athlete) => (
+                <option key={athlete.id} value={athlete.id}>
+                  {athlete.name}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             Discipline:
@@ -142,16 +151,14 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
             </select>
           </label>
           <label>
-            Athlete:
-            <select value={selectedAthlete || ""} onChange={handleAthleteChange}>
-              <option value="">Select Athlete</option>
-              {allAthletes.map((athlete) => (
-                <option key={athlete.id} value={athlete.id}>
-                  {athlete.name}
-                </option>
-              ))}
-            </select>
+            Date:
+            <input type="date" name="date" value={formData.date} onChange={handleInputChange} />
           </label>
+          <label>
+            Result Value:
+            <input type="text" name="resultValue" value={formData.resultValue} onChange={handleInputChange} />
+          </label>
+
           {formErrors.length > 0 && (
             <div className="form-errors">
               {formErrors.map((error, index) => (

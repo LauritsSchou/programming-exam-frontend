@@ -40,8 +40,10 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
   const handleEdit = (result: Result) => {
     const athlete = athletes.find((athlete) => athlete.results.some((athleteResult) => athleteResult.id === result.id));
     const athleteId = athlete ? athlete.id : null;
-    onEdit(result, athleteId);
-    window.scrollTo(0, 0);
+    if (athleteId !== undefined) {
+      onEdit(result, athleteId);
+      window.scrollTo(0, 0);
+    }
   };
 
   const getAthleteName = (result: Result) => {
@@ -59,7 +61,7 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
 
     if (!athlete) return false;
 
-    const age = parseInt(athlete.age);
+    const age = athlete.age;
     switch (group) {
       case "child":
         return age >= 6 && age <= 9;

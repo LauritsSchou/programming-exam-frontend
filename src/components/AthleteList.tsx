@@ -79,7 +79,7 @@ const AthleteList: React.FC<AthleteListProps> = ({ athletes, setAthletes, onEdit
       const fieldB = b[sortBy as keyof Athlete];
 
       if (sortBy === "age") {
-        return sortOrder === "asc" ? fieldA - fieldB : fieldB - fieldA;
+        return sortOrder === "asc" ? (fieldA as number) - (fieldB as number) : (fieldB as number) - (fieldA as number);
       } else if (sortBy === "disciplines") {
         const disciplinesA = a.disciplines.map((d) => d.name).join(", ");
         const disciplinesB = b.disciplines.map((d) => d.name).join(", ");

@@ -31,7 +31,7 @@ function DisciplinePage() {
   return (
     <div style={{ display: "flex", margin: "2rem", padding: "1vw", gap: "20vw", justifyContent: "space-evenly" }}>
       <DisciplineForm onSubmit={handleDisciplineSubmit} discipline={selectedDiscipline} />
-      <DisciplineList disciplines={disciplines} setDisciplines={setDisciplines} onEdit={handleDisciplineEdit} />
+      <DisciplineList disciplines={disciplines} onEdit={handleDisciplineEdit} />
     </div>
   );
 }
