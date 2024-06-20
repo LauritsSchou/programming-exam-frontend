@@ -35,7 +35,8 @@ const AthleteDetailsModal: React.FC<AthleteDetailsModalProps> = ({ isOpen, onReq
       <ul>
         {athlete.results.map((result, index) => (
           <li key={index}>
-            {result.resultValue} ({result.discipline.name})
+            {result.resultValue} {result.discipline.resultType === "DISTANCE" && "m"}
+            {result.discipline.resultType === "POINTS" && "points"} ({result.discipline.name})
           </li>
         ))}
       </ul>

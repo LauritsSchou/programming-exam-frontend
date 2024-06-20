@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getDisciplines, createResult, updateResult, getAthletes } from "../apiFacade";
 import { Result } from "../interfaces/resultInterface";
 import { Athlete } from "../interfaces/athleteInterface";
@@ -81,11 +81,25 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthle
       toast.error("Failed to save result");
     }
   };
+
   const validateForm = (): boolean => {
     const errors: string[] = [];
 
     if (!formData.date || !formData.resultValue || !formData.discipline.id || selectedAthlete === null) {
       errors.push("Please fill out all fields and select an athlete.");
+    }
+
+    // Validate resultValue based on resultType
+    if (formData.discipline.resultType === "TIME") {
+      const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9]):([0-9]{1,2})$/;
+      if (!timeRegex.test(formData.resultValue)) {
+        errors.push("Result value must be in hh:mm:ss:msms format for disciplines with result type 'TIME'.");
+      }
+    }
+
+    // Ensure resultValue is not negative
+    if (parseFloat(formData.resultValue) < 0) {
+      errors.push("Result value cannot be negative.");
     }
 
     setFormErrors(errors);
