@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { createResult, updateResult } from "../apiFacade";
+import { getDisciplines, createResult, updateResult, getAthletes } from "../apiFacade";
 import { Result } from "../interfaces/resultInterface";
+import { Athlete } from "../interfaces/athleteInterface";
 import { Discipline } from "../interfaces/disciplineInterface";
-import { getDisciplines } from "../apiFacade";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styling/result-form.css";
 
 interface ResultFormProps {
-  onSubmit: (result: Result) => void;
+  onSubmit: (result: Result, athleteId: number) => void;
   result: Result | null;
+  selectedAthleteId: number | null; // Add this line
 }
 
-const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
+const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result, selectedAthleteId }) => {
   const defaultFormObj: Result = {
     id: undefined,
     resultType: "",
@@ -23,12 +24,16 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
 
   const [formData, setFormData] = useState<Result>(result || defaultFormObj);
   const [allDisciplines, setAllDisciplines] = useState<Discipline[]>([]);
+  const [allAthletes, setAllAthletes] = useState<Athlete[]>([]);
+  const [selectedAthlete, setSelectedAthlete] = useState<number | null>(selectedAthleteId);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     setFormData(result || defaultFormObj);
+    setSelectedAthlete(selectedAthleteId);
     fetchDisciplines();
-  }, [result]);
+    fetchAthletes();
+  }, [result, selectedAthleteId]);
 
   const fetchDisciplines = async () => {
     try {
@@ -40,10 +45,19 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
     }
   };
 
+  const fetchAthletes = async () => {
+    try {
+      const athletes = await getAthletes();
+      setAllAthletes(athletes);
+    } catch (error) {
+      console.error("Error fetching athletes:", error);
+      toast.error("Failed to fetch athletes");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Perform validation checks
     if (!validateForm()) {
       return;
     }
@@ -55,8 +69,11 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
       } else {
         savedResult = await createResult(formData);
       }
-      onSubmit(savedResult);
+      if (selectedAthlete !== null) {
+        onSubmit(savedResult, selectedAthlete);
+      }
       setFormData(defaultFormObj);
+      setSelectedAthlete(null);
       toast.success("Result saved successfully");
     } catch (error) {
       console.error("Error saving result:", error);
@@ -67,8 +84,8 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
   const validateForm = (): boolean => {
     const errors: string[] = [];
 
-    if (!formData.resultType || !formData.date || !formData.resultValue || !formData.discipline.id) {
-      errors.push("Please fill out all fields.");
+    if (!formData.date || !formData.resultValue || !formData.discipline.id || selectedAthlete === null) {
+      errors.push("Please fill out all fields and select an athlete.");
     }
 
     setFormErrors(errors);
@@ -91,8 +108,13 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         discipline: selectedDiscipline,
+        resultType: selectedDiscipline.resultType,
       }));
     }
+  };
+
+  const handleAthleteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAthlete(parseInt(e.target.value, 10));
   };
 
   return (
@@ -100,10 +122,6 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
       <h2 className="result-header">{formData.id ? "Edit Result" : "Add New Result"}</h2>
       <div className="result-form-container">
         <form className="result-form" onSubmit={handleSubmit}>
-          <label>
-            Result Type:
-            <input type="text" name="resultType" value={formData.resultType} onChange={handleInputChange} />
-          </label>
           <label>
             Date:
             <input type="date" name="date" value={formData.date} onChange={handleInputChange} />
@@ -123,14 +141,25 @@ const ResultForm: React.FC<ResultFormProps> = ({ onSubmit, result }) => {
               ))}
             </select>
           </label>
-          <div className="form-errors">
-            {formErrors.map((error, index) => (
-              <p key={index} className="error-message">
-                {error}
-              </p>
-            ))}
-          </div>
-          <button type="submit">Save Result</button>
+          <label>
+            Athlete:
+            <select value={selectedAthlete || ""} onChange={handleAthleteChange}>
+              <option value="">Select Athlete</option>
+              {allAthletes.map((athlete) => (
+                <option key={athlete.id} value={athlete.id}>
+                  {athlete.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          {formErrors.length > 0 && (
+            <div className="form-errors">
+              {formErrors.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </div>
+          )}
+          <button type="submit">{formData.id ? "Update Result" : "Add Result"}</button>
         </form>
       </div>
     </div>

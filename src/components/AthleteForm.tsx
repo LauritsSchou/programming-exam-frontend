@@ -16,7 +16,7 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
   const defaultFormObj: Athlete = {
     id: undefined,
     name: "",
-    age: "",
+    age: 0,
     gender: "",
     club: "",
     disciplines: [],
@@ -44,8 +44,6 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Perform validation checks
     if (!validateForm()) {
       return;
     }
@@ -60,6 +58,7 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ onSubmit, athlete }) => {
       onSubmit(savedAthlete);
       setFormData(defaultFormObj);
       toast.success("Athlete saved successfully");
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error("Error saving athlete:", error);
       toast.error("Failed to save athlete");

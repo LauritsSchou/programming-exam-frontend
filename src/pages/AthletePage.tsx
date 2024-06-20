@@ -20,10 +20,12 @@ function AthletePage() {
   const handleAthleteSubmit = () => {
     setSelectedAthlete(null);
     fetchAthletes();
+    window.scrollTo(0, 0);
   };
 
   const handleAthleteEdit = (athlete: Athlete) => {
     setSelectedAthlete(athlete);
+    window.scrollTo(0, 0);
   };
 
   return (
