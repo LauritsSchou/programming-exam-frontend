@@ -32,6 +32,8 @@ function ResultPage() {
       const athlete = await getAthleteById(athleteId);
       await updateAthlete(athleteId, athlete);
       await fetchAthletesAndResults();
+      console.log("Athlete:", athlete, "Result:", result);
+
       athlete.results.push(result);
       setSelectedResult(null);
       setSelectedAthleteId(null);

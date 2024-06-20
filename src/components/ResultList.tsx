@@ -24,12 +24,8 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
     }
 
     try {
-      // Delete result from backend
       await deleteResult(id);
-
-      // Update frontend state to remove deleted result
       setResults(results.filter((result) => result.id !== id));
-
       toast.success("Result deleted successfully");
     } catch (error) {
       toast.error("Could not delete result, something went wrong.");
@@ -100,7 +96,6 @@ const ResultList: React.FC<ResultListProps> = ({ results, setResults, athletes, 
     return filteredResults.sort((a, b) => {
       switch (a.resultType) {
         case "TIME":
-          // For time, lower is better, so a - b
           return parseTime(a.resultValue) - parseTime(b.resultValue);
         case "DISTANCE":
         case "POINTS":
