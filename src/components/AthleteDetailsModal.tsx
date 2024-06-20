@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import { Athlete } from "../interfaces/athleteInterface";
 import "../styling/athlete-details-modal.css";
 
+Modal.setAppElement("#root");
+
 interface AthleteDetailsModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
