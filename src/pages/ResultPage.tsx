@@ -30,9 +30,9 @@ function ResultPage() {
   const handleResultSubmit = async (result: Result, athleteId: number) => {
     try {
       const athlete = await getAthleteById(athleteId);
-      athlete.results.push(result);
       await updateAthlete(athleteId, athlete);
       await fetchAthletesAndResults();
+      athlete.results.push(result);
       setSelectedResult(null);
       setSelectedAthleteId(null);
       window.scrollTo(0, 0);
